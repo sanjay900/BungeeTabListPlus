@@ -189,4 +189,10 @@ public class MyTabList implements TabListHandler {
                             slots_ping[i]);
         }
     }
+
+	@Override
+	public void switchServer() {
+		// TODO Auto-generated method stub
+		
+	}
 }

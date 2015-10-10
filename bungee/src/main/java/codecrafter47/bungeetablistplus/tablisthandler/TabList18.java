@@ -114,6 +114,7 @@ public class TabList18 implements TabListHandler {
             }
             updateSlot(batch, i, text, ping, skin);
         }
+        newWorld = false;
         batch.send(playerTablistHandler.getPlayer().unsafe());
 
         // update header/footer
@@ -131,7 +132,7 @@ public class TabList18 implements TabListHandler {
             }
         }
     }
-
+    boolean newWorld = false;
     private void resize(PacketAccess.Batch batch, int size) {
         if (size == sendSlots) {
             return;
@@ -160,7 +161,7 @@ public class TabList18 implements TabListHandler {
         if (textures != null) {
             textures = new String[]{textures[1], textures[2]};
         }
-        if ((sendTextures[row] == null && textures != null) || (sendTextures[row] != null && textures == null) || (textures != null && sendTextures[row] != null && !textures[0].equals(sendTextures[row]))) {
+        if (newWorld || (sendTextures[row] == null && textures != null) || (sendTextures[row] != null && textures == null) || (textures != null && sendTextures[row] != null && !textures[0].equals(sendTextures[row]))) {
             // update texture
             UUID offlineId = fakePlayerUUIDs[row];
             String[][] properties;
@@ -170,6 +171,9 @@ public class TabList18 implements TabListHandler {
             } else {
                 properties = new String[0][0];
                 sendTextures[row] = null;
+            }
+            if (isOnlineMode) {
+            	batch.spawnPlayer(row, offlineId);
             }
             batch.createOrUpdatePlayer(offlineId, fakePlayerUsernames[row], 0, ping, properties);
             textureUpdate = true;
@@ -206,4 +210,9 @@ public class TabList18 implements TabListHandler {
         resize(batch, 0);
         batch.send(playerTablistHandler.getPlayer().unsafe());
     }
+
+	@Override
+	public void switchServer() {
+		newWorld = true;
+	}
 }

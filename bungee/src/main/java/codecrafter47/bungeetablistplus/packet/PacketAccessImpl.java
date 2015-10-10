@@ -75,6 +75,9 @@ public class PacketAccessImpl implements PacketAccess {
         List<Team> playersAddedToTeams;
         List<Team> playersRemovedFromTeams;
         List<Team> removedTeams;
+        
+        List<NamedEntitySpawnPacket> spawnedPlayers;
+        
         List<PlayerListItem.Item> createdPlayers;
         List<PlayerListItem.Item> updatedNames;
         List<PlayerListItem.Item> updatedPings;
@@ -174,6 +177,14 @@ public class PacketAccessImpl implements PacketAccess {
             removedPlayers.add(item);
         }
 
+		@Override
+		public void spawnPlayer(int entityId, UUID player) {
+			if (spawnedPlayers == null) {
+				spawnedPlayers = new ArrayList<>();
+            }
+			spawnedPlayers.add(new NamedEntitySpawnPacket(player,entityId));
+		}
+
         @Override
         public void send(Connection.Unsafe connection) {
             if (removedPlayers != null) {
@@ -211,6 +222,9 @@ public class PacketAccessImpl implements PacketAccess {
             }
             if (playersAddedToTeams != null) {
                 playersAddedToTeams.forEach(connection::sendPacket);
+            }
+            if (spawnedPlayers != null) {
+            	spawnedPlayers.forEach(connection::sendPacket);
             }
         }
     }

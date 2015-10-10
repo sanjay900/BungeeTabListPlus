@@ -168,4 +168,10 @@ public class ScoreboardTabList implements TabListHandler {
     public void unload() {
         resize(0);
     }
+
+	@Override
+	public void switchServer() {
+		// TODO Auto-generated method stub
+		
+	}
 }

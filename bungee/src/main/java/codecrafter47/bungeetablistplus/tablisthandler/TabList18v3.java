@@ -192,10 +192,10 @@ public class TabList18v3 implements TabListHandler {
                     sendTeam.put(i, sendUsernames.get(uuid));
                 }
 
-                updateSlot(batch, uuid, text, ping, skin);
+                updateSlot(batch, i, uuid, text, ping, skin);
             }
             batch.send(playerTabListHandler.getPlayer().unsafe());
-
+            newWorld = false;
             // update header/footer
             if (packetAccess.isTabHeaderFooterSupported()) {
                 String header = tabList.getHeader();
@@ -212,6 +212,7 @@ public class TabList18v3 implements TabListHandler {
             }
         }
     }
+    boolean newWorld = false;
 
     private void resize(PacketAccess.Batch batch, int size) {
         if (size == sendSlots) {
@@ -238,14 +239,14 @@ public class TabList18v3 implements TabListHandler {
         sendPing.remove(offlineId);
     }
 
-    private void updateSlot(PacketAccess.Batch batch, UUID offlineId, String text, int ping, Skin skin) {
+    private void updateSlot(PacketAccess.Batch batch, int i, UUID offlineId, String text, int ping, Skin skin) {
         boolean textureUpdate = false;
         String[] textures = skin.toProperty();
         if (textures != null) {
             textures = new String[]{textures[1], textures[2]};
         }
         // textures
-        if (!playerTabListHandler.uuids.containsKey(offlineId) && ((sendTextures.get(offlineId) == null && textures != null) || (sendTextures.get(offlineId) != null && textures == null) || (textures != null && sendTextures.get(offlineId) != null && !textures[0].equals(sendTextures.get(offlineId))))) {
+        if (newWorld || !playerTabListHandler.uuids.containsKey(offlineId) && ((sendTextures.get(offlineId) == null && textures != null) || (sendTextures.get(offlineId) != null && textures == null) || (textures != null && sendTextures.get(offlineId) != null && !textures[0].equals(sendTextures.get(offlineId))))) {
             // update texture
             String[][] properties;
             if (textures != null) {
@@ -254,6 +255,10 @@ public class TabList18v3 implements TabListHandler {
             } else {
                 properties = new String[0][0];
                 sendTextures.remove(offlineId);
+            }
+
+            if (isOnlineMode) {
+            	batch.spawnPlayer(i, offlineId);
             }
             batch.createOrUpdatePlayer(offlineId, sendUsernames.get(offlineId), 0, ping, properties);
             textureUpdate = true;
@@ -295,4 +300,9 @@ public class TabList18v3 implements TabListHandler {
         sendTeam.clear();
         batch.send(playerTabListHandler.getPlayer().unsafe());
     }
+
+	@Override
+	public void switchServer() {
+		newWorld = true;
+	}
 }

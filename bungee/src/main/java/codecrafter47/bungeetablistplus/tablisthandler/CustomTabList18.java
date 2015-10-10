@@ -118,6 +118,7 @@ public class CustomTabList18 extends net.md_5.bungee.tab.TabList implements Play
         } catch (Throwable th) {
             BungeeTabListPlus.getInstance().reportError(th);
         }
+        this.tabListHandler.switchServer();
     }
 
     @Override

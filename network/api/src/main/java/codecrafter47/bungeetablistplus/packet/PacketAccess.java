@@ -54,6 +54,8 @@ public interface PacketAccess {
 
         void removePlayer(UUID player);
 
+        void spawnPlayer(int entityId, UUID player);
+
         void send(Connection.Unsafe connection);
     }
 

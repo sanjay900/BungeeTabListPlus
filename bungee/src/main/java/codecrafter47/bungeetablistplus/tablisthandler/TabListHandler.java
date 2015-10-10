@@ -22,7 +22,9 @@ package codecrafter47.bungeetablistplus.tablisthandler;
 import codecrafter47.bungeetablistplus.api.bungee.tablist.TabList;
 
 public interface TabListHandler {
-
+	
+	void switchServer();
+	
     void sendTabList(TabList tabList);
 
     void unload();

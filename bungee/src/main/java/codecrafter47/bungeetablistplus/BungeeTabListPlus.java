@@ -340,12 +340,14 @@ public class BungeeTabListPlus extends BungeeTabListPlusAPI {
                     getId.setAccessible(true);
                     registerPacket.setAccessible(true);
                     registerPacket.invoke(Protocol.GAME.TO_CLIENT, 62, getId.invoke(Protocol.GAME.TO_CLIENT, Team.class, maxProtocolVersion), TeamPacket.class);
+                    registerPacket.invoke(Protocol.GAME.TO_CLIENT, 0x0C, getId.invoke(Protocol.GAME.TO_CLIENT, NamedEntitySpawnPacket.class, maxProtocolVersion), NamedEntitySpawnPacket.class);
                 } else {
                     // 1.8
                     Class clazz = Protocol.DirectionData.class;
                     Method registerPacket = clazz.getDeclaredMethod("registerPacket", int.class, Class.class);
                     registerPacket.setAccessible(true);
                     registerPacket.invoke(Protocol.GAME.TO_CLIENT, 62, TeamPacket.class);
+                    registerPacket.invoke(Protocol.GAME.TO_CLIENT, 0x0C, NamedEntitySpawnPacket.class);
                 }
             } catch (IllegalArgumentException | NoSuchMethodException | SecurityException | InvocationTargetException | IllegalAccessException ex) {
                 getLogger().log(Level.SEVERE, "Failed to hook team packet", ex);
