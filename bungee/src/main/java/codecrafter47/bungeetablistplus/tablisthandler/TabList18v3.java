@@ -18,6 +18,15 @@
  */
 package codecrafter47.bungeetablistplus.tablisthandler;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
+import java.util.logging.Level;
+
+import com.google.common.base.Charsets;
+import com.google.common.collect.Maps;
+
 import codecrafter47.bungeetablistplus.BungeeTabListPlus;
 import codecrafter47.bungeetablistplus.api.bungee.Skin;
 import codecrafter47.bungeetablistplus.api.bungee.tablist.Slot;
@@ -26,18 +35,12 @@ import codecrafter47.bungeetablistplus.managers.SkinManager;
 import codecrafter47.bungeetablistplus.packet.PacketAccess;
 import codecrafter47.bungeetablistplus.util.ColorParser;
 import codecrafter47.bungeetablistplus.util.FastChat;
-import com.google.common.base.Charsets;
-import com.google.common.collect.Maps;
 import gnu.trove.map.TIntObjectMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
+import net.md_5.bungee.BungeeCord;
 import net.md_5.bungee.UserConnection;
 import net.md_5.bungee.api.ChatColor;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
-import java.util.logging.Level;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 public class TabList18v3 implements TabListHandler {
 
@@ -178,7 +181,7 @@ public class TabList18v3 implements TabListHandler {
                     sendTeam.put(i, username);
                 }
 
-                updateSlot(batch, i, username, uuid, text, ping, skin);
+                updateSlot(batch, slot.isHatLayerEnabled(), i, username, uuid, text, ping, skin);
             }
             batch.send(playerTabListHandler.getPlayer().unsafe());
             newWorld = false;
@@ -225,7 +228,7 @@ public class TabList18v3 implements TabListHandler {
         sendPing.remove(offlineId);
     }
 
-    private void updateSlot(PacketAccess.Batch batch, int i, String username, UUID offlineId, String text, int ping, Skin skin) {
+    private void updateSlot(PacketAccess.Batch batch, boolean hat, int i, String username, UUID offlineId, String text, int ping, Skin skin) {
         boolean textureUpdate = false;
         String[] textures = skin.toProperty();
         if (textures != null) {
@@ -242,8 +245,8 @@ public class TabList18v3 implements TabListHandler {
                 properties = new String[0][0];
                 sendTextures.remove(offlineId);
             }
-
-            if (isOnlineMode) {
+            ProxiedPlayer pl = BungeeCord.getInstance().getPlayer(offlineId);
+            if (hat && isOnlineMode && !playerTabListHandler.getPlayer().getServer().getInfo().getPlayers().contains(pl)) {
             	batch.spawnPlayer(i, offlineId);
             }
             batch.createOrUpdatePlayer(offlineId, username, 0, ping, properties);

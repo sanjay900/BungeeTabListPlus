@@ -30,7 +30,7 @@ public final class Slot {
     private final String text;
     private final int ping;
     private final Skin skin;
-
+    private final boolean hat;
     /**
      * Create a Slot with the given text, ping = 0 and a random Alex/ Steve skin
      *
@@ -49,7 +49,7 @@ public final class Slot {
     public Slot(String text, int ping) {
         this(text, ping, BungeeTabListPlusAPI.getDefaultSkin());
     }
-
+    
     /**
      * Create a Slot with the given text, ping and skin
      *
@@ -58,7 +58,19 @@ public final class Slot {
      * @param skin the skin
      */
     public Slot(String text, int ping, Skin skin) {
+        this(text,ping,skin,true);
+    }
+    /**
+     * Create a Slot with the given text, ping and skin, and with a hat layer
+     *
+     * @param text the text
+     * @param ping the ping
+     * @param skin the skin
+     * @param hat whether the hat layer is shown or not
+     */
+    public Slot(String text, int ping, Skin skin, boolean hat) {
         this.text = text;
+        this.hat = hat;
         if (ping < 0) {
             this.ping = -1;
         } else if (ping < 150) {
@@ -101,6 +113,13 @@ public final class Slot {
      */
     public Skin getSkin() {
         return skin;
+    }
+    /**
+     * Whether the hat layer is enabled
+     * @return true if the hat layer is enabled, false otherwise
+     */
+    public boolean isHatLayerEnabled() {
+    	return hat;
     }
 
     @Override
