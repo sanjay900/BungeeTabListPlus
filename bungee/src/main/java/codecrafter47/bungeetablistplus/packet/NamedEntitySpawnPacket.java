@@ -9,7 +9,7 @@ import net.md_5.bungee.protocol.ProtocolConstants;
 public class NamedEntitySpawnPacket extends DefinedPacket{
 	int id;
 	private UUID uuid;
-	private ByteBuf data = null;
+	private boolean created = true;
 	public NamedEntitySpawnPacket() {
 		
 	}
@@ -19,16 +19,16 @@ public class NamedEntitySpawnPacket extends DefinedPacket{
 	}
 
 	@Override
-	public void read(ByteBuf buf, ProtocolConstants.Direction direction, int protocolVersion)
+	public void read(ByteBuf in, ProtocolConstants.Direction direction, int protocolVersion)
 	{
-		data = buf;
+		created = false;
+		in.skipBytes( in.readableBytes() );
 	}
 
 	@Override
 	public void write(ByteBuf buf, ProtocolConstants.Direction direction, int protocolVersion)
 	{
-		if (data != null) {
-			buf.writeBytes(data);
+		if (!created) {
 			return;
 		}
 		writeVarInt(id,buf);
